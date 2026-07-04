@@ -66,6 +66,19 @@ tasks:
   # ---------------------------------------------------------------------------
   # Language-neutral quality gates (no delegation).
   # ---------------------------------------------------------------------------
+  ci:
+    desc: Full quality-gate suite (lint + tests + docs freshness + version drift) — same entry point locally and in CI
+    cmds:
+      - task: lint
+      - task: test:unit
+      - task: docs:check
+      - task: lint:versions
+
+  publish:check:
+    desc: Pre-publication gate for flipping a repo private -> public (full-history audits + OSS surface checks)
+    cmds:
+      - bash .tooling/local-ci/publish-check.sh
+
   docs:check:
     desc: Verify docs freshness (paths / task names / tree diagrams vs reality)
     cmds:
