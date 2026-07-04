@@ -1,9 +1,8 @@
 # Third-Party Notices
 
-This file enumerates every OSS dependency `{{repo_full_name}}` ships
+This file enumerates every OSS dependency Synforger/claude-code-statusline ships
 against (= direct + transitive) along with each license. It is
-**auto-generated** by `task gen-notices` (= calls
-`_core/scripts/gen-third-party-notices.py` which wraps `pip-licenses`
+**auto-generated** by `task gen-notices` (= wraps `pip-licenses`
 for Python and `license-checker-rseidelsohn` for Node). Do not edit
 this file by hand; re-run `task gen-notices` and commit the diff.
 
@@ -29,12 +28,10 @@ Trigger conditions:
 - Quarterly even when no new deps were added (= transitive deps shift)
 - Before every tagged release (= snapshot for the release notes)
 
-## Initial state
+## Current state
 
-This file is a placeholder until `task gen-notices` runs once. After
-the first run the table below is replaced with the real dependency
-list:
-
-| package | version | license | source |
-|---|---|---|---|
-| (run `task gen-notices` to populate) | — | — | — |
+This repository bundles no third-party code. The only runtime
+requirement is [jq](https://jqlang.github.io/jq/) (MIT license),
+which users install separately through their package manager — it is
+not shipped in this tree. If a bundled dependency is ever added, run
+`task gen-notices` and commit the generated table here.

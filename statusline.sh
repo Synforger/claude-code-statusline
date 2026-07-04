@@ -1,5 +1,6 @@
 #!/bin/bash
 # Claude Code statusline script
+# version: 0.1.0
 # Displays: model name | 5-hour usage | 7-day usage | context bar
 
 input=$(cat)
