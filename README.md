@@ -1,5 +1,7 @@
 # claude-code-statusline
 
+> 🇯🇵 日本語版: [README.ja.md](README.ja.md)
+
 A statusline script for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (Max Plan) that displays rate limits and context usage at a glance.
 
 ```

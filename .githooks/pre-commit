@@ -1,6 +1,10 @@
 #!/bin/bash
 set -eu
 
+# Repo-local pre-commit rules. The machine-wide anon baseline runs in the
+# guard-dispatcher AFTER this hook (AND-composition) — do not duplicate the
+# anon scan here.
+
 # -----------------------------------------------------------------------------
 # 1. Branch-name guard: refuse direct commits on main / develop (personal habit).
 # -----------------------------------------------------------------------------
@@ -20,8 +24,8 @@ fi
 if command -v gitleaks >/dev/null 2>&1; then
     if ! gitleaks protect --staged --redact --no-banner 2>&1; then
         echo ""
-        echo "gitleaks found secrets in staged files. Remove them or commit with"
-        echo "--no-verify only if you have verified the match is a false positive."
+        echo "gitleaks found secrets in staged files. Remove them or ask the"
+        echo "repo owner to allowlist a verified false positive."
         exit 1
     fi
 else
