@@ -1,15 +1,15 @@
 {
   "ack": {
-    "at": "2026-07-12T20:32:46+00:00",
+    "at": "2026-07-12T20:34:52+00:00",
     "code_blobs": {
       "scripts/gen-third-party-notices.py": "3258382cf5c57a12acc3ebe1cad46a1b33687947",
       "scripts/post-init-github-settings.sh": "be1ecac5ef6b1464e2a68b577214bbb5e278e9b8",
       "scripts/setup-branch-protection.sh": "6691d5a3e6b3f2ece6b150c3ecea476ed3c96b29",
-      "statusline.sh": "c40e73fc555fbeb4497c7789e6f9d784317d52a9"
+      "statusline.sh": "45a6aad5d1e00636df41a9ae38725300aa1ad6d3"
     },
-    "commit": "7d6913ea81ec416088d991fc21a5e1135439e5b4",
+    "commit": "b5628abfd790b0675913e739e367ef925731e03d",
     "doc_blob": "16cd9c7591e142c68d8d13e4a551aaf969c5514f",
-    "note": "onboarding baseline (README read-verified against statusline.sh + scripts)"
+    "note": "0.2.2 bump (version literal only)"
   },
   "doc": "README.md",
   "schema": 1
