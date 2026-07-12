@@ -1,0 +1,38 @@
+# staledocs — deterministic code<->docs drift detection.
+version: 1
+gate: strict
+
+source:
+  include:
+    - "statusline.sh"
+    - "scripts/**"
+  exclude: []
+
+docs:
+  include:
+    - "README.md"
+    - "README.ja.md"
+    - "ROADMAP.md"
+  exclude: []
+
+pairs:
+  - doc: README.md
+    code: ["statusline.sh", "scripts/**"]
+
+mirror:
+  enabled: false
+
+standalone:
+  - ROADMAP.md
+
+global:
+  - README.ja.md
+
+anchors:
+  min_length: 3
+  ignore:
+    # sample output renderings, not identifiers
+    - "5h:24%(3h22m)"
+    - "7d:53%"
+    - "ctx:███░░░░░35%"
+  include_fenced: false
