@@ -1,0 +1,31 @@
+{
+  "accepted": {
+    "anchors": {
+      "ignore": [
+        "5h:24%(3h22m)",
+        "7d:53%",
+        "ctx:\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u259135%"
+      ],
+      "include_fenced": false,
+      "min_length": 3
+    },
+    "docs_exclude": [],
+    "docs_include": [
+      "README.ja.md",
+      "README.md",
+      "ROADMAP.md"
+    ],
+    "gate": "strict",
+    "pair_docs": [
+      "README.md"
+    ],
+    "source_exclude": [],
+    "source_include": [
+      "scripts/**",
+      "statusline.sh"
+    ]
+  },
+  "at": "2026-07-15T08:46:48+00:00",
+  "note": "initial config baseline (staledocs 1.0 rollout)",
+  "schema": 1
+}
