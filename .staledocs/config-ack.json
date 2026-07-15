@@ -11,9 +11,8 @@
     },
     "docs_exclude": [],
     "docs_include": [
-      "README.ja.md",
-      "README.md",
-      "ROADMAP.md"
+      "*.md",
+      ".github/**/*.md"
     ],
     "examples_wired": [],
     "gate": "strict",
@@ -26,7 +25,7 @@
       "statusline.sh"
     ]
   },
-  "at": "2026-07-15T10:30:16+00:00",
-  "note": "advanced by pair ack (no weakening)",
+  "at": "2026-07-15T17:38:28+00:00",
+  "note": "docs scope widened to every tracked .md via glob (*.md + .github) \u2014 README/ROADMAP entries subsumed by *.md, not dropped; staledocs now sole owner of path/anchor liveness (docs-check axis A retired)",
   "schema": 1
 }
