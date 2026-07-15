@@ -1,15 +1,15 @@
 {
   "ack": {
-    "at": "2026-07-12T20:34:52+00:00",
+    "at": "2026-07-15T10:30:16+00:00",
     "code_blobs": {
       "scripts/gen-third-party-notices.py": "3258382cf5c57a12acc3ebe1cad46a1b33687947",
       "scripts/post-init-github-settings.sh": "be1ecac5ef6b1464e2a68b577214bbb5e278e9b8",
       "scripts/setup-branch-protection.sh": "6691d5a3e6b3f2ece6b150c3ecea476ed3c96b29",
-      "statusline.sh": "45a6aad5d1e00636df41a9ae38725300aa1ad6d3"
+      "statusline.sh": "a877b048c13f4e4163f5a6e35d84f3fcc718e226"
     },
-    "commit": "b5628abfd790b0675913e739e367ef925731e03d",
-    "doc_blob": "16cd9c7591e142c68d8d13e4a551aaf969c5514f",
-    "note": "0.2.2 bump (version literal only)"
+    "commit": "db6ffa6b213a2bee6e83db2920d0b442261e0c32",
+    "doc_blob": "1c10041d766ed78f0b608e1228f674cd97818a4a",
+    "note": "statusline.sh moves since the old ack are format-neutral; README inline anchors added in #22 still describe current behavior"
   },
   "doc": "README.md",
   "schema": 1
