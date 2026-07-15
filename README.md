@@ -2,7 +2,7 @@
 
 > 🇯🇵 日本語版: [README.ja.md](README.ja.md)
 
-A statusline script for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (Max Plan) that displays rate limits and context usage at a glance.
+A statusline script — `statusline.sh`, a single dependency-light bash file — for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (Max Plan) that displays rate limits and context usage at a glance.
 
 ```
 [Opus 4.6] 5h:24%(3h22m) 7d:53% ctx:███░░░░░35%
@@ -39,7 +39,7 @@ sudo apt install jq
 git clone https://github.com/synforger/claude-code-statusline.git
 ```
 
-2. Make the script executable (if not already):
+2. Make `statusline.sh` executable (if not already):
 
 ```bash
 chmod +x statusline.sh
