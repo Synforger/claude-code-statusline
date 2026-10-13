@@ -23,7 +23,7 @@
 # match elsewhere in the file cannot fire by accident.
 # =============================================================================
 
-current_version: "0.2.6"
+current_version: "0.2.7"
 
 targets:
   - file: statusline.sh
