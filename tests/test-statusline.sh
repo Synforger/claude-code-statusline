@@ -39,9 +39,11 @@ outside() {
     (cd "${T}" && find . -path "./$1" -prune -o -print | sort && find . -path "./$1" -prune -o -type f -exec cksum {} + | sort)
 }
 # The background rotation has no one to wait for it: poll for its mark.
-wait_for_mark() { # <state folder>
+# The rotation writes the mark first (so no other refresh starts a second one) and then carries lines
+# over and compresses the old log; it is done when the mark names this month and its lock is gone.
+wait_for_rotation() { # <state folder>
     for _ in $(seq 1 50); do
-        [ "$(cat "$1/.rate-limits.month" 2>/dev/null)" = "${MONTH}" ] && return 0
+        [ "$(cat "$1/.rate-limits.month" 2>/dev/null)" = "${MONTH}" ] && [ ! -e "$1/.rotate.lock" ] && return 0
         sleep 0.1
     done
     return 1
@@ -109,7 +111,7 @@ echo "2000-01" > "${STATE}/.rate-limits.month"
 printf '%s\n' '{"timestamp": 1, "account_id": "work", "five_hour_pct": 5}' > "${STATE}/rate-limits.jsonl"
 before="$(outside root)"
 refresh "${INPUT}" "AGENT_PLATFORM_ROOT=${T}/root" >/dev/null
-check "the rotation did not write the new month" "$(wait_for_mark "${STATE}"; echo $?)"
+check "the rotation did not finish the new month" "$(wait_for_rotation "${STATE}"; echo $?)"
 check "the old log was not archived" "$(ls "${STATE}"/rate-limits-*.jsonl.gz >/dev/null 2>&1; echo $?)"
 check "the resting account (work) was not carried over" "$(grep -q '"account_id": "work", "five_hour_pct": 5' "${STATE}/rate-limits.jsonl"; echo $?)"
 check "the rotation wrote outside the root" "$([ "$(outside root)" = "${before}" ]; echo $?)"
