@@ -39,10 +39,10 @@ sudo apt install jq
 git clone https://github.com/synforger/claude-code-statusline.git
 ```
 
-2. スクリプトに実行権限を付与 (未付与の場合):
+2. スクリプト 2 本に実行権限を付与 (未付与の場合):
 
 ```bash
-chmod +x statusline.sh
+chmod +x statusline.sh rotate-usage-log.sh
 ```
 
 3. Claude Code の設定 (`~/.claude/settings.json`) に追加:
@@ -68,6 +68,29 @@ chmod +x statusline.sh
 `/path/to/` は clone した実際のパスに置き換えてください。
 
 4. Claude Code を再起動すると、ターミナル上部に statusline が表示されます。
+
+## 使用量の記録
+
+rate limit を含む表示の更新ごとに、 `rate-limits.jsonl` へ JSON を 1 行足します (時刻・session・
+口座・モデル・5 時間と 7 日の使用率とリセット時刻・token 数・context 使用率)。 口座は
+`CLAUDE_CONFIG_DIR` から決まります (`~/.claude-work` は `work`、 未設定と `~/.claude` は
+`personal`)。 tmux の中では `tmux-session-map/<tmux session>` に、 そこで動く Claude の session id も
+書きます (同じ directory を使うタブを読み手が区別するため)。
+
+置き場は、 環境変数 `AGENT_PLATFORM_ROOT` があれば `$AGENT_PLATFORM_ROOT/state/statusline/`、
+無ければ `${XDG_STATE_HOME:-~/.local/state}/claude-code-statusline/` です。
+
+月が変わると `rotate-usage-log.sh` (= `statusline.sh` の隣に置く) が記録を
+`rate-limits-<時刻>.jsonl.gz` へ退け、 口座ごとの最新の行だけを持つ新しい記録を始めます (休んでいる
+口座の使用率も表示できるように)。 履歴は消しません。
+
+## テスト
+
+```bash
+task test:unit
+```
+
+作り物の `HOME` で、 器の根あり・なしの両方を走らせ、 置き場の外へ何も書かないことも確かめます。
 
 ## ライセンス
 
