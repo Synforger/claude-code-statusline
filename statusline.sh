@@ -82,9 +82,15 @@ USAGE_LOG="$STATE_DIR/rate-limits.jsonl"
 
 if mkdir -p "$STATE_DIR" 2>/dev/null; then
     # Start a new log when the month changes. Runs in the background so the display never
-    # waits; the script does nothing when the mark already names this month.
+    # waits; the script does nothing when the mark already names this month. With no log yet
+    # there is nothing to rotate: the mark is written here, so a background rotation never
+    # archives the line this run is about to write.
     if [ "$(cat "$STATE_DIR/.rate-limits.month" 2>/dev/null)" != "$(date +%Y-%m)" ]; then
-        bash "$(dirname "${BASH_SOURCE[0]}")/rotate-usage-log.sh" "$STATE_DIR" >/dev/null 2>&1 &
+        if [ -s "$USAGE_LOG" ]; then
+            bash "$(dirname "${BASH_SOURCE[0]}")/rotate-usage-log.sh" "$STATE_DIR" >/dev/null 2>&1 &
+        else
+            date +%Y-%m > "$STATE_DIR/.rate-limits.month" 2>/dev/null
+        fi
     fi
 
     # Only when Claude Code sends rate limits. Spaces after ":" and "," keep the line in the
