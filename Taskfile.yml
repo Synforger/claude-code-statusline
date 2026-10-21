@@ -31,7 +31,7 @@ tasks:
     desc: Install the runtime requirement (jq)
     cmds:
       - command -v jq >/dev/null || brew install jq || sudo apt install -y jq
-      - chmod +x statusline.sh
+      - chmod +x statusline.sh rotate-usage-log.sh
 
   update:
     desc: Update dependencies (stub)
@@ -39,14 +39,16 @@ tasks:
       - echo "task update is a stub — define your stack's update command"
 
   lint:
-    desc: Syntax-check the statusline script
+    desc: Syntax-check the statusline scripts
     cmds:
       - bash -n statusline.sh
+      - bash -n rotate-usage-log.sh
 
   test:unit:
-    desc: Run unit tests (stub)
+    desc: Run the statusline and usage-log rotation tests on a made-up HOME
     cmds:
-      - echo "task test:unit is a stub — define your stack's unit test command"
+      - bash tests/test-statusline.sh
+      - bash tests/test-rotate-usage-log.sh
 
   test:integration:
     desc: Run integration tests (stub)
