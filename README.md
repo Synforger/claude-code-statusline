@@ -42,7 +42,7 @@ git clone https://github.com/synforger/claude-code-statusline.git
 2. Make the scripts executable (if not already):
 
 ```bash
-chmod +x statusline.sh rotate-usage-log.sh
+chmod +x src/statusline.sh src/rotate-usage-log.sh
 ```
 
 3. Add to your Claude Code settings (`~/.claude/settings.json`):
@@ -56,7 +56,7 @@ chmod +x statusline.sh rotate-usage-log.sh
         "hooks": [
           {
             "type": "command",
-            "command": "/path/to/claude-code-statusline/statusline.sh"
+            "command": "/path/to/claude-code-statusline/src/statusline.sh"
           }
         ]
       }

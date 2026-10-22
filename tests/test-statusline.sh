@@ -6,7 +6,7 @@
 #   bash tests/test-statusline.sh
 set -uo pipefail
 
-SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/statusline.sh"
+SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/src/statusline.sh"
 T="$(mktemp -d)"
 trap 'rm -rf "${T}"' EXIT
 pass=0
