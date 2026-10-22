@@ -26,5 +26,5 @@
 
 bash:   ">=5.0"      # host
 git:    ">=2.40"     # host
-jq:     ">=1.6"      # statusline.sh (JSON parsing)
+jq:     ">=1.6"      # src/statusline.sh (JSON parsing)
 python: ">=3.10"     # docs-check.sh + gen-notices

@@ -7,7 +7,7 @@
 #   bash tests/test-rotate-usage-log.sh
 set -uo pipefail
 
-ROTATE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/rotate-usage-log.sh"
+ROTATE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/src/rotate-usage-log.sh"
 T="$(mktemp -d)"
 trap 'rm -rf "${T}"' EXIT
 pass=0

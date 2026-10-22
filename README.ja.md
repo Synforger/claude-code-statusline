@@ -42,7 +42,7 @@ git clone https://github.com/synforger/claude-code-statusline.git
 2. スクリプト 2 本に実行権限を付与 (未付与の場合):
 
 ```bash
-chmod +x statusline.sh rotate-usage-log.sh
+chmod +x src/statusline.sh src/rotate-usage-log.sh
 ```
 
 3. Claude Code の設定 (`~/.claude/settings.json`) に追加:
@@ -56,7 +56,7 @@ chmod +x statusline.sh rotate-usage-log.sh
         "hooks": [
           {
             "type": "command",
-            "command": "/path/to/claude-code-statusline/statusline.sh"
+            "command": "/path/to/claude-code-statusline/src/statusline.sh"
           }
         ]
       }

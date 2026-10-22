@@ -26,7 +26,7 @@
 current_version: "0.2.7"
 
 targets:
-  - file: statusline.sh
+  - file: src/statusline.sh
     replacements:
       - search: '# version: {OLD}'
         replace: '# version: {NEW}'
