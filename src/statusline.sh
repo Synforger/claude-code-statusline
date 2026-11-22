@@ -1,7 +1,7 @@
 #!/bin/bash
 # Claude Code statusline script
 # version: 0.2.7
-# Displays: model name | 5-hour usage | 7-day usage | context bar
+# Displays: model name | the usage windows that arrived (5-hour, 7-day) | context bar
 # Records: one line of rate-limit usage per refresh (see "Record usage" below)
 
 input=$(cat)
@@ -93,9 +93,10 @@ if mkdir -p "$STATE_DIR" 2>/dev/null; then
         fi
     fi
 
-    # Only when Claude Code sends rate limits. Spaces after ":" and "," keep the line in the
-    # form rotate-usage-log.sh matches on.
-    if [ -n "$FIVE_H" ]; then
+    # Either window may be absent (a plan without a 5-hour window, a window past its reset), so one
+    # is enough to record; a value that did not arrive is null, since 0 would read as "unused".
+    # Spaces after ":" and "," keep the line in the form rotate-usage-log.sh matches on.
+    if [ -n "$FIVE_H" ] || [ -n "$WEEK" ]; then
         # "~/.claude-work" -> "work", "~/.claude" or unset -> "personal"
         ACCOUNT_ID=$(basename "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" | sed 's/^\.claude-//; s/^\.claude$/personal/')
         [ -z "$ACCOUNT_ID" ] && ACCOUNT_ID="personal"
@@ -109,9 +110,9 @@ if mkdir -p "$STATE_DIR" 2>/dev/null; then
               pair("account_id"; $account),
               pair("model"; .model.display_name // "?"),
               pair("five_hour_pct"; .rate_limits.five_hour.used_percentage),
-              pair("five_hour_resets_at"; .rate_limits.five_hour.resets_at // 0),
-              pair("seven_day_pct"; .rate_limits.seven_day.used_percentage // 0),
-              pair("seven_day_resets_at"; .rate_limits.seven_day.resets_at // 0),
+              pair("five_hour_resets_at"; .rate_limits.five_hour.resets_at),
+              pair("seven_day_pct"; .rate_limits.seven_day.used_percentage),
+              pair("seven_day_resets_at"; .rate_limits.seven_day.resets_at),
               pair("input_tokens"; .context_window.total_input_tokens // 0),
               pair("output_tokens"; .context_window.total_output_tokens // 0),
               pair("context_pct"; $ctx)

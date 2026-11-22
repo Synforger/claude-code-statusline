@@ -125,5 +125,23 @@ rm -f "${T}/root"
 check "the display failed when the state folder could not be made" "$(case "${shown}" in *"Opus 4.6"*) echo 0 ;; *) echo 1 ;; esac)"
 check "the exit code was not 0 when the state folder could not be made" "${code}"
 
+# 9. A plan with no 5-hour window, and the reverse: what arrived is shown and recorded, what did not is null (not 0)
+fresh
+STATE="${T}/root/state/statusline"
+mkdir -p "${STATE}"
+echo "${MONTH}" > "${STATE}/.rate-limits.month"
+WEEK_ONLY="$(jq -c 'del(.rate_limits.five_hour)' <<< "${INPUT}")"
+shown="$(refresh "${WEEK_ONLY}" "AGENT_PLATFORM_ROOT=${T}/root")"
+check "the display without a 5-hour window is not 7d and ctx alone" "$(case "${shown}" in *"5h:"*) echo 1 ;; *"7d:"*"ctx:"*) echo 0 ;; *) echo 1 ;; esac)"
+check "7d alone was not recorded with a null 5-hour window" "$(tail -1 "${STATE}/rate-limits.jsonl" 2>/dev/null | jq -e 'has("five_hour_pct") and .five_hour_pct == null and .five_hour_resets_at == null and .seven_day_pct == 53 and .seven_day_resets_at == 4102444800' >/dev/null 2>&1; echo $?)"
+: > "${T}/root/carried.jsonl"
+bash "$(dirname "${SCRIPT}")/rotate-usage-log.sh" --seed "${STATE}/rate-limits.jsonl" "${T}/root/carried.jsonl" 2>/dev/null
+check "a line without a 5-hour window was not carried over" "$(jq -e '.account_id == "personal" and .seven_day_pct == 53' "${T}/root/carried.jsonl" >/dev/null 2>&1; echo $?)"
+shown="$(refresh "$(jq -c 'del(.rate_limits.seven_day)' <<< "${INPUT}")" "AGENT_PLATFORM_ROOT=${T}/root")"
+check "5h alone showed a 7d" "$(case "${shown}" in *"7d:"*) echo 1 ;; *"5h:"*) echo 0 ;; *) echo 1 ;; esac)"
+check "5h alone did not record a null 7-day window" "$(tail -1 "${STATE}/rate-limits.jsonl" | jq -e '.five_hour_pct == 23.5 and .seven_day_pct == null and .seven_day_resets_at == null' >/dev/null 2>&1; echo $?)"
+refresh "$(jq -c '.rate_limits = {seven_day: {used_percentage: 0}}' <<< "${INPUT}")" "AGENT_PLATFORM_ROOT=${T}/root" >/dev/null
+check "a usage of 0 or a missing reset time was not kept as it is" "$(tail -1 "${STATE}/rate-limits.jsonl" | jq -e '.seven_day_pct == 0 and .seven_day_resets_at == null' >/dev/null 2>&1; echo $?)"
+
 echo "statusline: ${pass} ok, ${fail} FAIL"
 [ "${fail}" -eq 0 ]
