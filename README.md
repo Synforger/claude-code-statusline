@@ -2,7 +2,7 @@
 
 > 🇯🇵 日本語版: [README.ja.md](README.ja.md)
 
-A statusline script — `statusline.sh`, a dependency-light bash script — for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (Max Plan) that displays rate limits and context usage at a glance.
+A statusline script — `statusline.sh`, a dependency-light bash script — for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that displays rate limits and context usage at a glance.
 
 ```
 [Opus 4.6] 5h:24%(3h22m) 7d:53% ctx:███░░░░░35%
@@ -16,6 +16,13 @@ A statusline script — `statusline.sh`, a dependency-light bash script — for 
 | `5h:24%(3h22m)` | 5-hour rate limit usage + time until reset |
 | `7d:53%` | 7-day rate limit usage |
 | `ctx:███░░░░░35%` | Context window usage (visual bar + percentage) |
+
+Claude Code sends each usage window only when it applies, and the statusline shows only what it
+was sent. On a plan without a 5-hour window the line is:
+
+```
+[Opus 4.6] 7d:53% ctx:███░░░░░35%
+```
 
 Colors change based on usage: green (<50%) → yellow (50-79%) → red (80%+).
 
@@ -71,9 +78,10 @@ Replace `/path/to/` with the actual path to the cloned repository.
 
 ## Usage log
 
-Each refresh that carries rate limits also appends one JSON line to `rate-limits.jsonl`: time,
-session, account, model, the 5-hour and 7-day usage with their reset times, token counts and
-context usage. The account comes from `CLAUDE_CONFIG_DIR` (`~/.claude-work` is `work`; unset or
+Each refresh that carries either usage window also appends one JSON line to `rate-limits.jsonl`:
+time, session, account, model, the 5-hour and 7-day usage with their reset times, token counts and
+context usage. A usage or reset time that was not sent is `null`, so a reader can tell "no such
+window" from "0% used". The account comes from `CLAUDE_CONFIG_DIR` (`~/.claude-work` is `work`; unset or
 `~/.claude` is `personal`). Inside tmux, the file `tmux-session-map/<tmux session>` also holds
 the Claude session id running there, so a reader can tell tabs that share a directory apart.
 

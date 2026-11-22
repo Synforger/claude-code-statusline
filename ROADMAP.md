@@ -4,7 +4,7 @@
 
 ## いま使えること
 
-- model 名 / 5 時間 rate limit (+ reset までの残り時間) / 7 日 rate limit / context 使用率バーの 1 行表示
+- model 名 / 5 時間 rate limit (+ reset までの残り時間) / 7 日 rate limit / context 使用率バーの 1 行表示 (rate limit は届いた枠だけ)
 - 使用率に応じた色分け (緑 <50% → 黄 50-79% → 赤 80%+)
 - rate limit の使用量を 1 行ずつ記録 (月が変わると退ける)・tmux session と Claude session の対応の記録。 置き場は `AGENT_PLATFORM_ROOT` があれば `<根>/state/statusline/`
 
