@@ -12,6 +12,10 @@ CTX_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d.
 FIVE_H=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
 FIVE_H_RESET=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 WEEK=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+# These two reach shell arithmetic, which evaluates whatever is written in a value: digits only.
+case "$CTX_PCT" in '' | *[!0-9]*) CTX_PCT=0 ;; esac
+FIVE_H_RESET=${FIVE_H_RESET%%.*}
+case "$FIVE_H_RESET" in *[!0-9]*) FIVE_H_RESET="" ;; esac
 
 # --- Colors ---
 GREEN='\033[32m'
@@ -79,6 +83,8 @@ else
     STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/claude-code-statusline"
 fi
 USAGE_LOG="$STATE_DIR/rate-limits.jsonl"
+# The records tell sessions and usage, so what is created here is readable by this user alone.
+umask 077
 
 if mkdir -p "$STATE_DIR" 2>/dev/null; then
     # Start a new log when the month changes. Runs in the background so the display never
@@ -123,6 +129,7 @@ if mkdir -p "$STATE_DIR" 2>/dev/null; then
     # so the newest transcript alone does not tell them apart.
     TMUX_SESSION=$(tmux display-message -p '#S' 2>/dev/null)
     SESSION_ID=$(printf '%s' "$input" | jq -r '.session_id // ""')
+    case "$TMUX_SESSION" in */* | . | ..) TMUX_SESSION="" ;; esac   # only a plain file name
     if [ -n "$TMUX_SESSION" ] && [ -n "$SESSION_ID" ]; then
         mkdir -p "$STATE_DIR/tmux-session-map" 2>/dev/null
         printf '%s' "$SESSION_ID" > "$STATE_DIR/tmux-session-map/$TMUX_SESSION" 2>/dev/null

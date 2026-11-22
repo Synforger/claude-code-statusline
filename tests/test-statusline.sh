@@ -1,7 +1,8 @@
 #!/bin/bash
 # Test for statusline.sh, on a made-up HOME: where the usage log, the monthly rotation and the
 # tmux map are written with and without AGENT_PLATFORM_ROOT, and that nothing outside the root
-# (or, with no root, outside the default state folder) is touched.
+# (or, with no root, outside the default state folder) is touched. Also what the input and the
+# tmux session's name may carry, and the permissions of new records.
 #
 #   bash tests/test-statusline.sh
 set -uo pipefail
@@ -142,6 +143,24 @@ check "5h alone showed a 7d" "$(case "${shown}" in *"7d:"*) echo 1 ;; *"5h:"*) e
 check "5h alone did not record a null 7-day window" "$(tail -1 "${STATE}/rate-limits.jsonl" | jq -e '.five_hour_pct == 23.5 and .seven_day_pct == null and .seven_day_resets_at == null' >/dev/null 2>&1; echo $?)"
 refresh "$(jq -c '.rate_limits = {seven_day: {used_percentage: 0}}' <<< "${INPUT}")" "AGENT_PLATFORM_ROOT=${T}/root" >/dev/null
 check "a usage of 0 or a missing reset time was not kept as it is" "$(tail -1 "${STATE}/rate-limits.jsonl" | jq -e '.seven_day_pct == 0 and .seven_day_resets_at == null' >/dev/null 2>&1; echo $?)"
+
+# 10. The numbers reach shell arithmetic, so nothing else may: no expression written in them runs
+fresh
+rm -f "${T}/cwd/ran"
+PAYLOAD='a[$(touch ran)]'
+refresh "$(jq -c --arg v "${PAYLOAD}" '.context_window.used_percentage = $v' <<< "${INPUT}")" "AGENT_PLATFORM_ROOT=${T}/root" >/dev/null 2>&1
+check "used_percentage was evaluated" "$([ ! -e "${T}/cwd/ran" ]; echo $?)"
+rm -f "${T}/cwd/ran"
+refresh "$(jq -c --arg v "${PAYLOAD}" '.rate_limits.five_hour.resets_at = $v' <<< "${INPUT}")" "AGENT_PLATFORM_ROOT=${T}/root" >/dev/null 2>&1
+check "resets_at was evaluated" "$([ ! -e "${T}/cwd/ran" ]; echo $?)"
+
+# 11. The tmux map takes a session name only when it is one file name; new records are the user's alone
+fresh
+(umask 022; refresh "${INPUT}" "AGENT_PLATFORM_ROOT=${T}/root" FAKE_TMUX_SESSION=../../beside >/dev/null 2>&1)
+check "the session name placed a file outside the map" "$([ ! -e "${T}/root/state/beside" ]; echo $?)"
+fresh
+(umask 022; refresh "${INPUT}" "AGENT_PLATFORM_ROOT=${T}/root" FAKE_TMUX_SESSION=tab-c >/dev/null)
+check "a new record is readable by other users" "$([ -s "${T}/root/state/statusline/rate-limits.jsonl" ] && [ -z "$(find "${T}/root/state/statusline" -perm -044)" ]; echo $?)"
 
 echo "statusline: ${pass} ok, ${fail} FAIL"
 [ "${fail}" -eq 0 ]

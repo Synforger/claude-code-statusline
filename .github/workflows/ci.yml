@@ -13,6 +13,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -23,10 +26,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0   # the docs gate resolves references against history
+      # A pinned release archive, verified against its checksum, instead of an install script fetched at run time.
       - name: Install go-task
-        run: sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+        env:
+          TASK_VERSION: v3.54.0
+          TASK_SHA256: 680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb
+        run: |
+          curl --fail --silent --show-error --location --output task.tar.gz \
+            "https://github.com/go-task/task/releases/download/${TASK_VERSION}/task_linux_amd64.tar.gz"
+          echo "${TASK_SHA256}  task.tar.gz" | sha256sum --check -
+          sudo tar --extract --gzip --file task.tar.gz --directory /usr/local/bin task
+          rm task.tar.gz
       - name: Run the local gate suite
         run: task ci
