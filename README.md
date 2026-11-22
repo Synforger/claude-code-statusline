@@ -56,25 +56,16 @@ chmod +x src/statusline.sh src/rotate-usage-log.sh
 
 ```json
 {
-  "hooks": {
-    "StatusLine": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/path/to/claude-code-statusline/src/statusline.sh"
-          }
-        ]
-      }
-    ]
+  "statusLine": {
+    "type": "command",
+    "command": "/path/to/claude-code-statusline/src/statusline.sh"
   }
 }
 ```
 
 Replace `/path/to/` with the actual path to the cloned repository.
 
-4. Restart Claude Code. The statusline should appear at the top of your terminal.
+4. Restart Claude Code. The statusline should appear at the bottom of Claude Code.
 
 ## Usage log
 

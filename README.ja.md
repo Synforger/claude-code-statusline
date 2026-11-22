@@ -56,25 +56,16 @@ chmod +x src/statusline.sh src/rotate-usage-log.sh
 
 ```json
 {
-  "hooks": {
-    "StatusLine": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/path/to/claude-code-statusline/src/statusline.sh"
-          }
-        ]
-      }
-    ]
+  "statusLine": {
+    "type": "command",
+    "command": "/path/to/claude-code-statusline/src/statusline.sh"
   }
 }
 ```
 
 `/path/to/` は clone した実際のパスに置き換えてください。
 
-4. Claude Code を再起動すると、ターミナル上部に statusline が表示されます。
+4. Claude Code を再起動すると、Claude Code の画面の下部に statusline が表示されます。
 
 ## 使用量の記録
 
